@@ -23,7 +23,6 @@ const getBooksData = async function (req, res) {
 //takes year as input in post request and gives list of all books published that year
 const getBooksInYear = async function (req, res) {
   let publishedYear = req.body.year;
-  console.log(req.body);
   let booksWithYear = await BookModel.find({ year: publishedYear });
   res.send(booksWithYear);
 };
@@ -33,28 +32,41 @@ const getBooksInYear = async function (req, res) {
 //if body had { year: 2020} then you would fetch the books in this year
 const getParticularBooks = async function (req, res) {
   let filter = {};
-  if (req.body.hasOwnProperty("bookName")) {
-    let book = req.body.bookName;
+  const {
+    bookName,
+    authorName,
+    tags,
+    totalPages,
+    year,
+    stockAvailable,
+    prices,
+  } = req.body;
+  if (bookName) {
     filter.bookName = book;
-  } else if (req.body.hasOwnProperty("authorName")) {
-    let author = req.body.authorName;
+  }
+  if (authorName) {
     filter.authorName = author;
-  } else if (req.body.hasOwnProperty("tags")) {
-    let tag = req.body.tags;
-    filter.tags = tag;
-  } else if (req.body.hasOwnProperty("totalPages")) {
-    let page = req.body.totalPages;
+  }
+  if (tags != undefined) {
+    filter.tags = { $in: tags };
+  }
+  if (totalPages) {
     filter.totalPages = page;
-  } else if (req.body.hasOwnProperty("year")) {
-    let launchYear = req.body.year;
+  }
+  if (year) {
     filter.year = launchYear;
-  } else if (req.body.hasOwnProperty("stockAvailable")) {
-    let stock = req.body.stockAvailable;
+  }
+  if (stockAvailable) {
     filter.stockAvailable = stock;
+  }
+  if (prices != undefined) {
+    if (prices.indianPrice != undefined)
+      filter["prices.indianPrice"] = prices.indianPrice;
+    if (prices.europePrice != undefined)
+      filter["prices.europePrice"] = prices.europePrice;
   }
   let particularBooks = await BookModel.find(filter);
   res.send(particularBooks);
-  console.log(filter);
 };
 
 //request to return all books who have an Indian price tag of “100INR” or “200INR” or “500INR”
