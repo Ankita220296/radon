@@ -54,9 +54,8 @@ const getAuthors = async function (req, res) {
     .select({ _id: 0 });
 
   book = book.map((ele) => ele.author_id);
-  author = author.filter((ele) => book.includes(ele.author_id));
-
-  res.send(author);
+  author = author.filter((ele) => book.includes(ele.author_id)).map((ele)=>{return{author_name : ele.author_name , age :ele.age}});
+    res.send(author);
 };
 
 module.exports.createAuthor = createAuthor;
