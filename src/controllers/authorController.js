@@ -4,6 +4,8 @@ const bookModel = require("../models/bookModel");
 //Write create APIs for both books and authors
 const createAuthor = async function (req, res) {
   let data = req.body;
+  let authorId = data.author_id;
+  if(!authorId) res.send ({msg : "Author Id is mandatory"})
   let savedData = await authorModel.create(data);
   res.send({ msg: savedData });
 };
@@ -18,7 +20,7 @@ const getAuthorsData = async function (req, res) {
 const getAuthorId = async function (req, res) {
   let author = await authorModel.findOne({ author_name: "Chetan Bhagat" });
   let id = author.author_id;
-  let book = await bookModel.find({author_id :id});
+  let book = await bookModel.find({ author_id: id });
   res.send(book);
 };
 
