@@ -5,7 +5,7 @@ const bookModel = require("../models/bookModel");
 const createAuthor = async function (req, res) {
   let data = req.body;
   let authorId = data.author_id;
-  if(!authorId) res.send ({msg : "Author Id is mandatory"})
+  if (!authorId) res.send({ msg: "Author Id is mandatory" });
   let savedData = await authorModel.create(data);
   res.send({ msg: savedData });
 };
@@ -29,12 +29,13 @@ const getAuthorId = async function (req, res) {
 const getBookWithPrice = async function (req, res) {
   let books = await bookModel
     .find({ price: { $gte: 50, $lte: 100 } })
-    .select({ author_id: 1 });
+    .select({ author_id: 1, _id: 0 });
 
   books = books.map((book) => book.author_id);
-  const authors = await authorModel.find({ author_id: { $in: books } });
-  let authorName = authors.map((name) => name.author_name);
-  res.send(authorName);
+  const authors = await authorModel
+    .find({ author_id: { $in: books } })
+    .select({ author_name: 1, _id: 0 });
+  res.send({ authors });
 };
 
 module.exports.createAuthor = createAuthor;
