@@ -31,14 +31,36 @@ const getBookWithPrice = async function (req, res) {
     .find({ price: { $gte: 50, $lte: 100 } })
     .select({ author_id: 1, _id: 0 });
 
+  console.log(books);
   books = books.map((book) => book.author_id);
+  console.log(books);
   const authors = await authorModel
     .find({ author_id: { $in: books } })
     .select({ author_name: 1, _id: 0 });
+
   res.send({ authors });
+};
+
+//Find a list of authors whose are older than 50 years of age with at least one book that has a rating greater than 4
+
+const getAuthors = async function (req, res) {
+  let author = await authorModel
+    .find({ age: { $gt: 50 } })
+    .select({ author_name: 1, age: 1, _id: 0, author_id: 1 });
+  const ids = author.map((ele) => ele.author_id);
+
+  let book = await bookModel
+    .find({ ratings: { $gt: 4 }, author_id: { $in: ids } })
+    .select({ _id: 0 });
+
+  book = book.map((ele) => ele.author_id);
+  author = author.filter((ele) => book.includes(ele.author_id));
+
+  res.send(author);
 };
 
 module.exports.createAuthor = createAuthor;
 module.exports.getAuthorsData = getAuthorsData;
 module.exports.getAuthorId = getAuthorId;
 module.exports.getBookWithPrice = getBookWithPrice;
+module.exports.getAuthors = getAuthors;

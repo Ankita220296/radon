@@ -26,9 +26,17 @@ const getAuthorAndUpdate = async function (req, res) {
   let id = name.author_id;
   let author = await authorModel.findOne({ author_id: id });
   let price = name.price;
-  res.send({author, price});
+  res.send({ author, price });
+};
+
+// Write an api GET /books-by-authorid/<Author_Id></Author_Id>
+const getBooksByAuthorId = async function (req, res) {
+  let id = req.params.num
+  let books = await bookModel.find({ author_id: id }).select({name:1,_id:0});
+  res.send(books);
 };
 
 module.exports.createBook = createBook;
 module.exports.getBooksData = getBooksData;
 module.exports.getAuthorAndUpdate = getAuthorAndUpdate;
+module.exports.getBooksByAuthorId = getBooksByAuthorId;
