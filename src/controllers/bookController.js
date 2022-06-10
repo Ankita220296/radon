@@ -62,16 +62,6 @@ const totalSalesPerAuthor = async function (req, res) {
 }
 
 
-
-
-// CRUD OPERATIONS:
-// CREATE
-// READ
-// UPDATE
-// DELETE
-
-
-
 module.exports.createBook = createBook
 module.exports.getBooksData = getBooksData
 module.exports.updateBooks = updateBooks
