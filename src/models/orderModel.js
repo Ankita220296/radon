@@ -14,10 +14,10 @@ const orderSchema = new mongoose.Schema(
     },
     amount: Number,
     date: {type:Date,default :Date.now},
-    // isFreeAppUser: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    isFreeAppUser: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
