@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema(
       ref: "product",
     },
     amount: Number,
-    date: {type:Date,default :Date.now},
+    date: String,
     isFreeAppUser: {
       type: Boolean,
       default: false,
