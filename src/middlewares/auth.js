@@ -8,13 +8,13 @@ const headerMiddle = async function (req, res, next) {
 
   try {
     let decodedtoken = jwt.verify(token, "functionup-radon");
-    console.log(decodedtoken);
   } catch (error) {
     return res.send("The token is Invalid");
   }
 
   let userId = req.params.userId;
   let user = await userModel.findById(userId);
+
   if (!user) {
     return res.send("No such user exists");
   }

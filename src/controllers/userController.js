@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
+const middleware = require("../middlewares/auth")
 
 const createUser = async function (req, res) {
   let data = req.body;
@@ -41,7 +42,7 @@ const getUserData = async function (req, res) {
 const updateUser = async function (req, res) {
   let userId = req.params.userId;
   let userData = req.body;
-  let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, userData);
+  let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, userData,{new :true});
   res.send({ status: updatedUser, data: updatedUser });
 };
 
@@ -49,7 +50,7 @@ const deleteUser = async function (req, res) {
   let userId = req.params.userId;
   let userDetails = await userModel.findOneAndUpdate(
     { _id: userId },
-    { $set: { isDeleted: true } }
+    { isDeleted: true } ,{new :true} 
   );
   res.send({ userDetails });
 };
