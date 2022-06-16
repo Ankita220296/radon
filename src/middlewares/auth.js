@@ -5,25 +5,31 @@ const userModel = require("../models/userModel");
 const authMiddleware = async function (req, res, next) {
   let token = req.headers["x-Auth-token"] || req.headers["x-auth-token"];
 
-  if (!token) res.send({ status: false, msg: "Token must be present" });
+  if (!token)
+    res.status(400).send({ status: false, msg: "Token must be present" });
 
   try {
     let decodedtoken = jwt.verify(token, "functionup-radon");
-    let userId = req.params.userId;
-    let userLoggedIn = decodedtoken.userId;
 
-    if (userId!= userLoggedIn)
-      return res.send(
-        "User logged in is not allowed to modified another users data"
-      );
+    try {
+      let userId = req.params.userId;
+      let userLoggedIn = decodedtoken.userId;
 
-    let user = await userModel.findById(userId);
-    if (!user) {
-      return res.send("No such user exists");
+      if (userId != userLoggedIn)
+        return res
+          .status(403)
+          .send("User logged in is not allowed to modified another users data");
+
+      let user = await userModel.findById(userId);
+      if (!user) {
+        return res.status(401).send("No such user exists");
+      }
+      req.user = user;
+    } catch (err) {
+      res.status(500).send({ msg: "This is Error", Error: err.massage });
     }
-    req.user = user;
-  } catch (error) {
-    return res.send("The token is Invalid");
+  } catch (err) {
+    return res.status(403).send("Token is invalid");
   }
 
   next();
