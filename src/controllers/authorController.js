@@ -31,9 +31,9 @@ const getBookWithPrice = async function (req, res) {
     .find({ price: { $gte: 50, $lte: 100 } })
     .select({ author_id: 1, _id: 0 });
 
-  console.log(books);
+ 
   books = books.map((book) => book.author_id);
-  console.log(books);
+ 
   const authors = await authorModel
     .find({ author_id: { $in: books } })
     .select({ author_name: 1, _id: 0 });
